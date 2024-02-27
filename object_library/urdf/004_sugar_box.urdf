@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="004_sugar_box">
+	<link name="base">
+		<collision>
+			<geometry>
+				<mesh filename="../vhacd/004_sugar_box_vhacd.obj" scale="1.0 1.0 1.0"/>
+			</geometry>
+			<origin xyz="0 0 0"/>
+			<contact_coefficients mu="0.24" />
+		</collision>
+		<visual>
+			<geometry>
+				<mesh filename="../vhacd/004_sugar_box_vhacd.obj" scale="1.0 1.0 1.0"/>
+			</geometry>
+			<origin xyz="0 0 0"/>
+		</visual>
+		<inertial>
+			<mass value="0.4"/>
+			<inertia ixx="0.00130039268859581" ixy="-7.734926195038051e-06" ixz="3.829351528595099e-05" iyy="0.0010895013008604484" iyz="-1.3367868690991762e-05" izz="0.00033840334132649005" />
+			<origin xyz="-0.007807555273224016 -0.017082680498368183 0.08619582978339559"/>
+		</inertial>
+	</link>
+</robot>

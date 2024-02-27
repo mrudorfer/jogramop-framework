@@ -1,0 +1,93 @@
+<?xml version="1.0" ?>
+<robot name="frame_vis">
+
+    <!-- colours -->
+    <material name="blue">
+        <color rgba="0 0 0.925 1"/>
+    </material>
+    <material name="green">
+        <color rgba="0 0.925 0 1"/>
+    </material>
+    <material name="red">
+        <color rgba="0.925 0 0 1"/>
+    </material>
+
+    <!-- links -->
+    <link name="base_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="0"/>
+            <inertia ixx = "0" ixy = "0" ixz = "0"
+                    iyx = "0" iyy = "0" iyz = "0"
+                    izx = "0" izy = "0" izz = "0" />
+        </inertial>
+    </link>
+
+    <link name="x_axis">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="0"/>
+            <inertia ixx = "0" ixy = "0" ixz = "0"
+                    iyx = "0" iyy = "0" iyz = "0"
+                    izx = "0" izy = "0" izz = "0" />
+        </inertial>
+        <visual>
+            <geometry>
+                <cylinder length="1" radius="0.05"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+    </link>
+
+    <link name="y_axis">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="0"/>
+            <inertia ixx = "0" ixy = "0" ixz = "0"
+                    iyx = "0" iyy = "0" iyz = "0"
+                    izx = "0" izy = "0" izz = "0" />
+        </inertial>
+        <visual>
+            <geometry>
+                <cylinder length="1" radius="0.05"/>
+            </geometry>
+            <material name="green"/>
+        </visual>
+    </link>
+
+    <link name="z_axis">
+        <inertial>
+            <origin rpy="0 1.5708 0" xyz="0 0 0"/>
+            <mass value="0"/>
+            <inertia ixx = "0" ixy = "0" ixz = "0"
+                    iyx = "0" iyy = "0" iyz = "0"
+                    izx = "0" izy = "0" izz = "0" />
+        </inertial>
+        <visual>
+            <geometry>
+                <cylinder length="1" radius="0.05"/>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+    </link>
+
+    <!-- joints -->
+    <joint name="attach_x_to_base" type="fixed">
+        <origin rpy="0 1.5708 0" xyz="0.5 0 0"/>
+        <parent link="base_link"/>
+        <child link="x_axis"/>
+    </joint>
+
+    <joint name="attach_y_to_base" type="fixed">
+        <origin rpy="0 1.5708 1.5708" xyz="0 0.5 0"/>
+        <parent link="base_link"/>
+        <child link="y_axis"/>
+    </joint>
+
+    <joint name="attach_z_to_base" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0.5"/>
+        <parent link="base_link"/>
+        <child link="z_axis"/>
+    </joint>
+
+</robot>

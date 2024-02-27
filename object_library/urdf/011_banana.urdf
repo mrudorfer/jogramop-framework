@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="011_banana">
+	<link name="base">
+		<collision>
+			<geometry>
+				<mesh filename="../vhacd/011_banana_vhacd.obj" scale="1.0 1.0 1.0"/>
+			</geometry>
+			<origin xyz="0 0 0"/>
+			<contact_coefficients mu="0.24" />
+		</collision>
+		<visual>
+			<geometry>
+				<mesh filename="../vhacd/011_banana_vhacd.obj" scale="1.0 1.0 1.0"/>
+			</geometry>
+			<origin xyz="0 0 0"/>
+		</visual>
+		<inertial>
+			<mass value="0.2"/>
+			<inertia ixx="0.0004546861885045654" ixy="-0.00013532646462137405" ixz="3.830990296798498e-06" iyy="9.978048764326839e-05" iyz="-1.951314983181539e-06" izz="0.0005199969464690479" />
+			<origin xyz="-0.009589697228139873 0.004125403664727114 0.016979803884432286"/>
+		</inertial>
+	</link>
+</robot>

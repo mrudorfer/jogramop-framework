@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="gate_0_78">
+	<link name="base">
+		<collision>
+			<geometry>
+				<mesh filename="../vhacd/gate_0_78_vhacd.obj" scale="1.0 1.0 1.0"/>
+			</geometry>
+			<origin xyz="0 0 0"/>
+			<contact_coefficients mu="0.24" />
+		</collision>
+		<visual>
+			<geometry>
+				<mesh filename="../vhacd/gate_0_78_vhacd.obj" scale="1.0 1.0 1.0"/>
+			</geometry>
+			<origin xyz="0 0 0"/>
+		</visual>
+		<inertial>
+			<mass value="0"/>
+			<inertia ixx="0.0" ixy="-0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+			<origin xyz="1.0 0.05000000074505805 0.7804494261545992"/>
+		</inertial>
+	</link>
+</robot>
