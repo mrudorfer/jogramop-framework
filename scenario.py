@@ -206,6 +206,6 @@ if __name__ == '__main__':
         # s.select_n_grasps(10)
         # idx = s.select_indices
         # burg.visualization.show_grasp_set([s.scene], s.gs[idx], with_plane=True, gripper=GM(0.1))
-        s.export_for_cpp()
-        s.export_IK_solutions()
-        # show_scenario(s)
+        #s.export_for_cpp()
+        #       s.export_IK_solutions()
+        show_scenario(s)
