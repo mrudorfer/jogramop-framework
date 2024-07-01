@@ -1,3 +1,15 @@
+"""
+note: only required if you want to rebuild the scenarios from scratch.
+
+this script takes the meshes and creates required vhacd and urdf files, so that
+they can be used within the simulation environment.
+it processes both the obstacles created by create_obstacle_mesh.py and the
+YCB objects, which are the target objects.
+
+usage: python create_object_library.py
+outputs will be written to ./object_library/vhacd/ and ./object_library/urdf/
+the object library will be stored in ./object_library/object_library.yaml
+"""
 import os
 import burg_toolkit as burg
 

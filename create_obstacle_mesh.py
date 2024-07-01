@@ -1,3 +1,10 @@
+"""
+note: only required if you want to rebuild the scenarios from scratch.
+
+this script creates the meshes for the environment.
+usage: python create_obstacle_mesh.py
+outputs will be written to ./object_library/meshes/
+"""
 import open3d as o3d
 import burg_toolkit as burg
 burg.visualization.configure_visualizer_mode(burg.visualization.VisualizerMode.CONFIGURABLE_VIEWER)

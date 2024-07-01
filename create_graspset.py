@@ -1,9 +1,18 @@
+"""
+note: only required if you want to rebuild the grasps for the scenarios.
+
+this script will, for each scenario, create grasp annotations for the target object.
+
+usage: python create_graspset.py
+outputs will be written to ./scenarios/<scenario-id>/grasps.npy
+"""
 import os
 import numpy as np
 import burg_toolkit as burg
 
 
 def get_scene_files(skip_scenes=None):
+    # gives paths to all scene files that can be found in the scenario directory
     scenes = os.listdir('scenarios')
     files = []
     for scene in scenes:
@@ -16,6 +25,12 @@ def get_scene_files(skip_scenes=None):
 
 
 def create_grasps(scene_file):
+    """
+    uses antipodal grasp sampling from BURG toolkit to create grasp annotations.
+    we first sample 2000 grasps for the target object, then use a simplified gripper model
+    to filter out grasps that are in collision.
+    of the remaining grasp candidates, we randomly sample 200 to keep as annotations.
+    """
     scene, lib, _ = burg.Scene.from_yaml(scene_file)
     target_obj = scene.objects[0]
     save_fn = os.path.join(os.path.dirname(scene_file), 'grasps.npy')
@@ -56,7 +71,7 @@ def create_grasps(scene_file):
 
 
 if __name__ == '__main__':
-    skip_scene_ids = None
+    skip_scene_ids = None  # if you want to skip particular scenes, e.g. ['11', '12', '13']
     scene_fns = get_scene_files(skip_scene_ids)
     for scene_fn in scene_fns:
         create_grasps(scene_fn)

@@ -1,3 +1,9 @@
+"""
+script to fix paths in all the yaml/urdf files.
+converts backslashes into forward slash that works uniformly on all systems.
+
+usage: python fix_paths.py
+"""
 import os, fnmatch
 
 

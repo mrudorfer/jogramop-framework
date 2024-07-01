@@ -1,3 +1,13 @@
+"""
+note: only required if you want to rebuild the scenarios from scratch.
+
+this script assumes the object library is available and will
+arrange the objects to create scenarios with different difficulty levels.
+
+usage: python create_scenario.py
+outputs will be written to ./scenarios/<scenario-id>
+"""
+
 import os
 import numpy as np
 import burg_toolkit as burg
