@@ -7,9 +7,17 @@ import time
 
 
 SCENARIO_DIR = 'scenarios'
+SCENARIO_IDS = [11, 12, 13, 14, 15, 21, 22, 23, 24, 25, 31, 32, 33, 34, 35, 41, 42, 43, 44, 45]
 
 
 class Timer:
+    """
+    this is a class to conveniently measure timings and additional count occurrences
+    once instantiated, you can use timer.start('key') and timer.stop('key') to measure time, if you do it repeatedly
+    it will sum up the elapsed time between all start and stop calls.
+    with timer.count('key') you can count occurrences.
+    finally, timer.print() will provide a summary of all stats.
+    """
     def __init__(self):
         self.timers = {}
         self.counters = {}
@@ -48,7 +56,13 @@ class Color:
 
 
 def make_sphere(sim, pose, color):
-    # just for visualization purposes in pybullet
+    """
+    adds a sphere to Simulator sim, for visualization purposes
+
+    :param sim: simulation.Simulator
+    :param pose: (4, 4) transformation matrix
+    :param color: list of 4 values, [r, g, b, a], with a=1 for full opacity
+    """
     radius = 0.02
     sphere_collision_id = sim._p.createVisualShape(
         sim._p.GEOM_SPHERE, radius=radius, rgbaColor=color
@@ -82,19 +96,19 @@ def quaternion_from_rotation_matrix(rot_mat):
 def get_translation_and_angle(pos1, orn1, pos2, orn2) -> tuple[float, float]:
     """
     Calculates distance in task space, gives translation in [m] and rotation in degree
-    :param pos1:
-    :param orn1:
-    :param pos2:
-    :param orn2:
-    :return: tuple(translation, angle)
+    :param pos1: [x, y, z] position1
+    :param orn1: [x, y, z, w] quaternion1
+    :param pos2: [x, y, z] position2
+    :param orn2: [x, y, z, w] quaternion2
+    :return: tuple(translation, angle in degree)
     """
     pos_dist = np.linalg.norm(pos2-pos1)
-    diff_quat = pybullet.getDifferenceQuaternion(orn1, orn2)
-    angle = np.rad2deg(2 * np.arccos(np.abs(diff_quat[3])))
+    angle = angle_between_quaternions(orn1, orn2, as_degree=True)
     return pos_dist, angle
 
 
 def get_fake_grasp(pos=None):
+    """produces a mock grasp based on the given pose, used for debugging"""
     if pos is None:
         pos = [1, 0.5, 0.2]
     pose = np.eye(4)
