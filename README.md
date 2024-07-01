@@ -1,7 +1,7 @@
 # A framework for joint grasp and motion planning in confined spaces
 
 
-This is a work by Martin Rudorfer, Jiri Hartvich, Vojtech Vonasek (Aston University, Birmingham, UK & Czech Technical University, Prague, CZ) and currently under review at RoMoCo'24.
+This is a work by Martin Rudorfer, Jiri Hartvich, Vojtech Vonasek (Aston University, Birmingham, UK & Czech Technical University, Prague, CZ) and was presented at the 13th International Workshop on Robot Motion and Control - RoMoCo'24. 
 
 _**Abstract:**_
 Robotic grasping is a fundamental skill across
@@ -24,7 +24,10 @@ available as open source.
 
 The components can be found in the following repositories:
 - [github.com/mrudorfer/jogramop-framework](https://github.com/mrudorfer/jogramop-framework) - benchmark scenarios & scripts for scenario creation, visualization, and evaluation (Python)
-- [github.com/Hartvi/Burs](https://github.com/Hartvi/Burs) - the baseline planners (C++)
+- [github.com/Hartvi/jogramop-planners](https://github.com/Hartvi/jogramop-planners) - the baseline planners (C++)
+
+You can find more details in the respective repositories.
+Here are some pictures outlining the key features of the work:
 
 ![Overview](assets/overview.png)
 
