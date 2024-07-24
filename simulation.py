@@ -1,4 +1,5 @@
 import logging
+import os
 
 import numpy as np
 import burg_toolkit as burg
@@ -30,7 +31,7 @@ class GraspingSimulator(burg.sim.SimulatorBase):
             tf = burg.util.tf_from_pos_quat(pos, orn, convention='pybullet')
         # pos, orn = burg.util.position_and_quaternion_from_tf(tf)
 
-        body_id = self.bullet_client.loadURDF('robots/frame_vis/frame_vis.urdf',
+        body_id = self.bullet_client.loadURDF(os.path.join(os.path.dirname(__file__), 'robots/frame_vis/frame_vis.urdf'),
                                               # basePosition=pos,
                                               # baseOrientation=orn,
                                               useFixedBase=True,
@@ -41,7 +42,8 @@ class GraspingSimulator(burg.sim.SimulatorBase):
         tf_burg2py = np.eye(4)
         tf_burg2py[0:3, 3] = com
         start_pose = tf @ tf_burg2py
-        pos, quat = burg.util.position_and_quaternion_from_tf(start_pose, convention='pybullet')
+        pos, quat = burg.util.position_and_quaternion_from_tf(
+            start_pose, convention='pybullet')
         self.bullet_client.resetBasePositionAndOrientation(body_id, pos, quat)
 
         return body_id
@@ -53,7 +55,7 @@ class GraspingSimulator(burg.sim.SimulatorBase):
             tf = burg.util.tf_from_pos_quat(pos, orn, convention='pybullet')
         # pos, orn = burg.util.position_and_quaternion_from_tf(tf)
 
-        body_id = self.bullet_client.loadURDF('robots/frame_vis/sphere_vis.urdf',
+        body_id = self.bullet_client.loadURDF(os.path.join(os.path.dirname(__file__), 'robots/frame_vis/sphere_vis.urdf'),
                                               # basePosition=pos,
                                               # baseOrientation=orn,
                                               useFixedBase=True,
@@ -64,13 +66,11 @@ class GraspingSimulator(burg.sim.SimulatorBase):
         tf_burg2py = np.eye(4)
         tf_burg2py[0:3, 3] = com
         start_pose = tf @ tf_burg2py
-        pos, quat = burg.util.position_and_quaternion_from_tf(start_pose, convention='pybullet')
+        pos, quat = burg.util.position_and_quaternion_from_tf(
+            start_pose, convention='pybullet')
         self.bullet_client.resetBasePositionAndOrientation(body_id, pos, quat)
 
         return body_id
-
-
-
 
     def remove(self, body_id):
         self.bullet_client.removeBody(body_id)
@@ -84,13 +84,16 @@ class GraspingSimulator(burg.sim.SimulatorBase):
 
         # in contrast to getContactPoints, this also works before stepSimulation or performCollisionDetection
         distance = 0.01  # do not return any points for objects that are farther apart than this
-        points = self._p.getClosestPoints(body1, body2, distance, linkIndexA=link1, linkIndexB=link2)
-        _log.debug(f'found {len(points)} points that are close between links {link1} and {link2}')
+        points = self._p.getClosestPoints(
+            body1, body2, distance, linkIndexA=link1, linkIndexB=link2)
+        _log.debug(
+            f'found {len(points)} points that are close between links {link1} and {link2}')
 
         for point in points:
             distance = point[8]
             if distance < threshold:
-                _log.debug(f'collision detected between links {link1} and {link2}')
+                _log.debug(
+                    f'collision detected between links {link1} and {link2}')
                 return True
         return False
 
@@ -134,11 +137,14 @@ class FrankaRobot(burg.robots.RobotBase):
         self._bullet_client = self._simulator.bullet_client
 
         # load robot
-        urdf_fn = 'robots/franka_panda/panda.urdf'
+        urdf_fn = os.path.join(os.path.dirname(
+            __file__), 'robots/franka_panda/panda.urdf')
         if with_platform:
-            urdf_fn = 'robots/franka_panda/mobile_panda.urdf'
+            urdf_fn = os.path.join(os.path.dirname(
+                __file__), 'robots/franka_panda/mobile_panda.urdf')
 
-        pos, quat = burg.util.position_and_quaternion_from_tf(pose, convention='pybullet')
+        pos, quat = burg.util.position_and_quaternion_from_tf(
+            pose, convention='pybullet')
         self._body_id, self.robot_joints = self._simulator.load_robot(
             urdf_fn, position=pos, orientation=quat, fixed_base=True
         )
@@ -156,7 +162,8 @@ class FrankaRobot(burg.robots.RobotBase):
         self.with_platform = with_platform
         if with_platform:
             self.end_effector_id = 14
-            self.arm_joint_ids = [0, 1, 3, 4, 5, 6, 7, 8, 9]  # includes base X/Y mobile platform
+            # includes base X/Y mobile platform
+            self.arm_joint_ids = [0, 1, 3, 4, 5, 6, 7, 8, 9]
             self.finger_joint_ids = [12, 13]
         else:
             self.end_effector_id = 11
@@ -173,7 +180,8 @@ class FrankaRobot(burg.robots.RobotBase):
         self.finger_force = 100
         self.grasp_speed = 0.1
         self.configure_gripper_friction()
-        self._simulator.register_step_func(self.gripper_constraints)  # both fingers act symmetrically
+        # both fingers act symmetrically
+        self._simulator.register_step_func(self.gripper_constraints)
 
         self.reset_home_pose()
 
@@ -186,7 +194,8 @@ class FrankaRobot(burg.robots.RobotBase):
         self.reset_gripper()
 
     def get_ee_pose_for_grasp(self, grasp):
-        raise DeprecationWarning('this is being done during loading of scenario. dont use directly anymore')
+        raise DeprecationWarning(
+            'this is being done during loading of scenario. dont use directly anymore')
         # based on a grasp from BURG toolkit, returns the target pose for the end effector
         # this is due to the end effector using a different frame than the grasp convention
         ee_pose = grasp.pose @ self.tf_grasp2ee
@@ -230,11 +239,13 @@ class FrankaRobot(burg.robots.RobotBase):
         if len(joint_conf) == len(self.arm_joint_ids):
             arm_joint_conf = joint_conf
         elif len(joint_conf) == len(self.arm_joint_ids) + len(self.finger_joint_ids):
-            arm_joint_conf = self.get_arm_joint_conf_from_motor_joint_conf(joint_conf)
+            arm_joint_conf = self.get_arm_joint_conf_from_motor_joint_conf(
+                joint_conf)
         elif len(joint_conf) == self.end_effector_link_id:
             arm_joint_conf = np.asarray(joint_conf)[self.arm_joint_ids]
         else:
-            raise ValueError('cannot match joint conf to arm/motor/all joints; unexpected length.')
+            raise ValueError(
+                'cannot match joint conf to arm/motor/all joints; unexpected length.')
 
         # set robot joint angles
         self.reset_arm_joints(arm_joint_conf)
@@ -293,13 +304,15 @@ class FrankaRobot(burg.robots.RobotBase):
                     self.body_id, self.end_effector_link_id, pos, orn,
                     maxNumIterations=iterations, residualThreshold=threshold)
 
-        joint_positions = self.get_arm_joint_conf_from_motor_joint_conf(joint_positions)
+        joint_positions = self.get_arm_joint_conf_from_motor_joint_conf(
+            joint_positions)
 
         # ensure solution has reached the desired pose
         actual_pos, actual_orn = self.forward_kinematics(joint_positions)
         pos_diff = np.linalg.norm(pos - actual_pos)
         if orn is not None:
-            orn_diff = util.angle_between_quaternions(orn, actual_orn, as_degree=True)
+            orn_diff = util.angle_between_quaternions(
+                orn, actual_orn, as_degree=True)
         else:
             orn_diff = 0
 
@@ -313,7 +326,8 @@ class FrankaRobot(burg.robots.RobotBase):
         # adjusts both fingers. 0==closed, 1==open
         assert 0.0 <= open_scale <= 1.0, 'open_scale is out of range'
         for joint_id in self.finger_joint_ids:
-            self._bullet_client.resetJointState(self.body_id, joint_id, self.finger_open_distance * open_scale)
+            self._bullet_client.resetJointState(
+                self.body_id, joint_id, self.finger_open_distance * open_scale)
 
     def configure_gripper_friction(self, lateral_friction=1.0, spinning_friction=1.0, rolling_friction=0.0001,
                                    friction_anchor=True):
@@ -325,7 +339,8 @@ class FrankaRobot(burg.robots.RobotBase):
 
     def gripper_constraints(self):
         # first finger joint is "leader", second finger joint simply mirrors the position
-        pos = self._bullet_client.getJointState(self.body_id, self.finger_joint_ids[0])[0]
+        pos = self._bullet_client.getJointState(
+            self.body_id, self.finger_joint_ids[0])[0]
         self._bullet_client.setJointMotorControl2(
             self.body_id,
             self.finger_joint_ids[1],
@@ -340,7 +355,8 @@ class FrankaRobot(burg.robots.RobotBase):
     def open(self, open_scale=1.0):
         # opens the gripper, blocks for 2 seconds
         joint_ids = [i for i in self.finger_joint_ids]
-        target_states = [self.finger_open_distance * open_scale, self.finger_open_distance * open_scale]
+        target_states = [self.finger_open_distance *
+                         open_scale, self.finger_open_distance * open_scale]
 
         self._bullet_client.setJointMotorControlArray(
             self.body_id,
@@ -382,14 +398,16 @@ class FrankaRobot(burg.robots.RobotBase):
                 joint_limits[i, 1] = joint_info['upper limit']
                 i += 1
 
-        assert i == len(self.arm_joint_ids), 'joint limits should be equal to number of joints'
+        assert i == len(
+            self.arm_joint_ids), 'joint limits should be equal to number of joints'
         return joint_limits
 
     def move_to(self, target_joint_config):
         # given target joint values for the arm, robot moves there, blocks until target reached
 
         # make a joint trajectory
-        trajectory = TrajectoryPlanner.ptp(self.arm_joints_pos(), target_joint_config)
+        trajectory = TrajectoryPlanner.ptp(
+            self.arm_joints_pos(), target_joint_config)
 
         # execute a joint trajectory
         self.execute_joint_trajectory(trajectory)
@@ -423,12 +441,15 @@ class FrankaRobot(burg.robots.RobotBase):
             step_end_time = start_time + time_step + dt
             while self._simulator.simulated_seconds < step_end_time:
                 self._simulator.step()
-            _log.debug(f'expected vs. actual joint pos after time step\n\t{target_pos}\n\t{self.arm_joints_pos()}')
+            _log.debug(
+                f'expected vs. actual joint pos after time step\n\t{target_pos}\n\t{self.arm_joints_pos()}')
 
         # should have arrived at the final target now, check if true
-        arrived = joint_trajectory.joint_pos[-1] - self.arm_joints_pos() < 0.001
+        arrived = joint_trajectory.joint_pos[-1] - \
+            self.arm_joints_pos() < 0.001
         if np.all(arrived):
-            _log.debug('finished trajectory execution. arrived at goal position.')
+            _log.debug(
+                'finished trajectory execution. arrived at goal position.')
             return True
         else:
             _log.warning(f'trajectory execution terminated but target configuration not reached:'
@@ -452,13 +473,16 @@ class FrankaRobot(burg.robots.RobotBase):
         else:
             max_link = 11
             ignore_links = [7, 11]
-            first_links = [1, 2, 3, 4, 5]  # 6 cannot collide with the fingers due to kinematics
+            # 6 cannot collide with the fingers due to kinematics
+            first_links = [1, 2, 3, 4, 5]
 
         for first_link in first_links:
             # skip next link (supposed to be in contact) plus all the ignore links
-            check_links = [link for link in np.arange(first_link+2, max_link+1) if link not in ignore_links]
+            check_links = [link for link in np.arange(
+                first_link+2, max_link+1) if link not in ignore_links]
             for check_link in check_links:
-                collision = self._simulator.links_in_collision(self.body_id, first_link, self.body_id, check_link)
+                collision = self._simulator.links_in_collision(
+                    self.body_id, first_link, self.body_id, check_link)
                 if collision:
                     return True
         return False
@@ -525,8 +549,9 @@ class TrajectoryPlanner:
                     distance_from_start = v[j] * t - v[j] ** 2 / (2 * a[j])
                 else:  # deceleration period
                     distance_from_start = (2 * a[j] * v[j] * trajectory_time - 2 * v[j] ** 2 - a[j] ** 2 * (
-                                t - trajectory_time) ** 2) / (2 * a[j])
-                waypoints[i][j] = start_q[j] + directions[j] * distance_from_start
+                        t - trajectory_time) ** 2) / (2 * a[j])
+                waypoints[i][j] = start_q[j] + \
+                    directions[j] * distance_from_start
 
         assert np.allclose(waypoints[-1], target_q), f'waypoint interpolation went wrong, target pose is' \
                                                      f'{target_q} but last waypoint is {waypoints[-1]}'

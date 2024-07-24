@@ -17,15 +17,21 @@ class Scenario:
     - simulator
     - robot
     """
+
     def __init__(self, scenario_id, robot_pose=None, with_platform=True):
         # load scene
         self.id = scenario_id
-        self.scene_fn = os.path.join(util.SCENARIO_DIR, f'{scenario_id:03d}', 'scene.yaml')
+        scenario_dir = os.path.join(
+            os.path.dirname(__file__), util.SCENARIO_DIR)
+        self.scene_fn = os.path.join(
+            scenario_dir, f'{scenario_id:03d}', 'scene.yaml')
         self.scene, lib, _ = burg.Scene.from_yaml(self.scene_fn)
-        print(f'loaded scene with {len(self.scene.objects)} objects and {len(self.scene.bg_objects)} obstacles.')
+        print(
+            f'loaded scene with {len(self.scene.objects)} objects and {len(self.scene.bg_objects)} obstacles.')
 
         # fetch corresponding grasps
-        grasps_fn = os.path.join(util.SCENARIO_DIR, f'{scenario_id:03d}', 'grasps.npy')
+        grasps_fn = os.path.join(
+            scenario_dir, f'{scenario_id:03d}', 'grasps.npy')
         grasps = np.load(grasps_fn, allow_pickle=True)
         # convert from BURG to franka frame
         grasps = grasps @ FrankaRobot.tf_grasp2ee
@@ -51,7 +57,8 @@ class Scenario:
             return
 
         if n > len(self.gs):
-            raise ValueError('cannot select more grasps than available. n must be smaller than number of grasps')
+            raise ValueError(
+                'cannot select more grasps than available. n must be smaller than number of grasps')
 
         rng = np.random.default_rng(seed)
         self.select_indices = rng.choice(len(self.gs), n, replace=False)
@@ -62,7 +69,8 @@ class Scenario:
         """
         sim = GraspingSimulator(verbose=with_gui)
         sim.add_scene(self.scene)
-        robot = FrankaRobot(sim, self.robot_pose, with_platform=self.with_platform)
+        robot = FrankaRobot(sim, self.robot_pose,
+                            with_platform=self.with_platform)
 
         return robot, sim
 
@@ -96,10 +104,12 @@ class Scenario:
         for g in range(len(self.gs)):
             count.start('calculate IK')
             target_pose = self.gs.poses[g]
-            pos, orn = burg.util.position_and_quaternion_from_tf(target_pose, convention='pybullet')
+            pos, orn = burg.util.position_and_quaternion_from_tf(
+                target_pose, convention='pybullet')
 
             # do the actual IK
-            target_conf = robot.inverse_kinematics(pos, orn, null_space_control=True)
+            target_conf = robot.inverse_kinematics(
+                pos, orn, null_space_control=True)
             count.stop('calculate IK')
             count.start('perform checks')
             if target_conf is not None:
