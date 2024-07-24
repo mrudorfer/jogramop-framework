@@ -435,6 +435,12 @@ if __name__ == '__main__':
                 waypoints.append(row_array)
             print(waypoints[-1])
     # print(waypoints)
+    """EXAMPLE from jogramop-planners results:
+    python jogramop-framework/visualization.py --scenario 013 --traj_file results/s011-p0-s1.csv
+
+    EXAMPLE on video rendering:
+    python jogramop-framework/visualization.py --results results/
+    """
     test_vis(scenario, waypoints)
     # show_scenarios()
 
