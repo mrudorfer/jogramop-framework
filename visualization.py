@@ -435,7 +435,7 @@ if __name__ == '__main__':
                 waypoints.append(row_array)
             print(waypoints[-1])
     # print(waypoints)
-    # test_vis(scenario, waypoints)
-    show_scenarios()
+    test_vis(scenario, waypoints)
+    # show_scenarios()
 
     # batch_create_videos('../Burs/blind_trajectories/')
