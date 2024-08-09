@@ -3,9 +3,14 @@ A framework for joint grasp and motion planning in confined spaces.
 
 This is part of the publication:
 
-M. Rudorfer, J. Hartvich, V. Vonasek: "A Framework for Joint Grasp and Motion Planning in Confined Spaces", 13th International Workshop on Robot Motion and Control (RoMoCo'24), 2024.
+[M. Rudorfer, J. Hartvich, V. Vonasek: "A Framework for Joint Grasp and Motion Planning in Confined Spaces", 13th International Workshop on Robot Motion and Control (RoMoCo'24), 2024.](https://ieeexplore.ieee.org/document/10604306)
+
 
 Check out our project website: https://mrudorfer.github.io/jogramop-framework/
+
+For a packaged version of the scenarios/environments for which you can just `import jogramop` please check out the following repository:
+https://github.com/mrudorfer/jogramop-package
+
 
 ## Content
 
@@ -125,3 +130,22 @@ python create_cpp_export.py
 
 Note that we manually used `simplify` from [this](https://github.com/hjwdzh/Manifold) repository (after step 2) to ensure the VHACD meshes are as small as possible without sacrificing geometric accuracy. 
 This is not necessary but improves runtime of collision checking.
+
+
+## Citation
+
+If you use our work, please cite the following publication:
+
+```python
+@INPROCEEDINGS{jogramop_2024,
+  author={Rudorfer, Martin and Hartvich, Jiři and Vonásek, Vojtěch},
+  booktitle={2024 13th International Workshop on Robot Motion and Control (RoMoCo)}, 
+  title={A Framework for Joint Grasp and Motion Planning in Confined Spaces}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={1-7},
+  keywords={Robot motion;Annotations;Conferences;Grasping;Benchmark testing;Aerospace electronics;Planning},
+  doi={10.1109/RoMoCo60539.2024.10604306}
+}
+```
